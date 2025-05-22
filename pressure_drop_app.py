@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import math
 import matplotlib.pyplot as plt
+import io  # ✅ Required for Excel download
 
 # -----------------------------
 # Function: Calculate screen area
@@ -79,13 +80,23 @@ if submitted:
     }
 
     df = pd.DataFrame([results])
-    st.success("Calculation Complete")
+    st.success("✅ Calculation Complete")
     st.table(df)
 
-    # Download as Excel
-    st.download_button("📥 Download Excel", df.to_excel(index=False), "pressure_drop_result.xlsx")
+    # ✅ Fixed: Download Excel using BytesIO
+    buffer = io.BytesIO()
+    with pd.ExcelWriter(buffer, engine='openpyxl') as writer:
+        df.to_excel(writer, index=False)
+    buffer.seek(0)
 
-    # Plot Graph
+    st.download_button(
+        label="📥 Download Excel",
+        data=buffer,
+        file_name="pressure_drop_result.xlsx",
+        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
+
+    # 🔍 Plot Graph: Flowrate vs Pressure Drop
     flow_values = np.linspace(1, 20, 40)
     clean_dp_list, clog_dp_list = [], []
     for f in flow_values:
