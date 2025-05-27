@@ -41,7 +41,7 @@ def pressure_drop(A_pipe, A_screen, flow_m3_hr, rho, K):
 def generate_pdf(data, graph_img_path):
     pdf = FPDF()
     pdf.add_page()
-    logo_path = os.path.join(os.path.dirname(__file__), "pressure_drop_calculator", "logo.png")
+    logo_path = "pressure_drop_calculator/logo.png"
     pdf.image(logo_path, x=10, y=8, w=40)
     pdf.ln(25)
     pdf.set_font("Arial", 'B', 14)
