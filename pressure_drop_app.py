@@ -1,3 +1,4 @@
+
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -7,14 +8,11 @@ import io
 from PIL import Image
 from fpdf import FPDF
 import tempfile
+import os
 
 # Constants
 GRAVITY = 980  # cm/s²
 K_DEFAULT = 2.5  # Loss coefficient
-
-# Load logo
-def load_logo():
-    return "pressure_drop_calculator/logo.png"
 
 # Calculate screen area
 def calculate_screen_area(strainer_type, od_mm, length_mm, height_mm=None):
@@ -43,7 +41,7 @@ def pressure_drop(A_pipe, A_screen, flow_m3_hr, rho, K):
 def generate_pdf(data, graph_img_path):
     pdf = FPDF()
     pdf.add_page()
-    logo_path = load_logo()
+    logo_path = os.path.join(os.path.dirname(__file__), "pressure_drop_calculator", "logo.png")
     pdf.image(logo_path, x=10, y=8, w=40)
     pdf.ln(25)
     pdf.set_font("Arial", 'B', 14)
@@ -80,6 +78,7 @@ P - % opening in perforated sheet
 μ - Viscosity of media in cP
 K - Velocity Head Loss (From Miller, D.S.-Internal Flow Systems)
 """)
+
     with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as f:
         pdf.output(f.name)
         return f.name
